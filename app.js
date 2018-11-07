@@ -3,10 +3,14 @@ const express = require('express');
 const path = require('path');
 const cookieParser = require('cookie-parser');
 const logger = require('morgan');
+const helmet = require('helmet');
 
 const indexRouter = require('./routes/index');
 
 const app = express();
+
+// https://expressjs.com/en/advanced/best-practice-security.html#use-helmet
+app.use(helmet());
 
 app.use(logger('dev'));
 app.use(express.json());
@@ -30,7 +34,7 @@ app.use((err, req, res, next) => {
 
   // render the error page
   res.status(err.status || 500);
-  res.render('error');
+  res.send(err);
 });
 
 module.exports = app;
