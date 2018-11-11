@@ -29,12 +29,15 @@ app.use((req, res, next) => {
 // eslint-disable-next-line no-unused-vars
 app.use((err, req, res, next) => {
   // set locals, only providing error in development
-  res.locals.message = err.message;
   res.locals.error = req.app.get('env') === 'development' ? err : {};
 
   // render the error page
   res.status(err.status || 500);
-  res.send(err);
+  res.send({
+    message: err.message || 'Internal server error',
+    // if in development include the stack trace
+    stack: req.app.get('env') === 'development' ? err.stack : undefined,
+  });
 });
 
 module.exports = app;
