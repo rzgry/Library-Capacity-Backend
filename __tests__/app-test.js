@@ -33,4 +33,22 @@ describe('app', () => {
       expect(response.statusCode).toBe(200);
     });
   });
+  describe('GET /CurrentCapcity?lib=Taylor', () => {
+    it('should respond with a list of library names', async () => {
+      const response = await request(app).get('/CurrentCapcity?lib=Taylor');
+      expect(response.statusCode).toBe(200);
+    });
+  });
+  describe('GET  /CurrentCapcity?lib=Weldon', () => {
+    it('should respond with a list of library names', async () => {
+      const response = await request(app).get('/CurrentCapcity?lib=Weldon');
+      expect(response.statusCode).toBe(200);
+    });
+  });
+  describe('GET /CurrentCapcity?lib=FakeLibrary', () => {
+    it('should respond with a list of library names', async () => {
+      const response = await request(app).get('/CurrentCapcity?lib=FakeLibrary');
+      expect(response.statusCode).toBe(400);
+    });
+  });
 });
