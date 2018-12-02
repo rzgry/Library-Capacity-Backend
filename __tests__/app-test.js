@@ -26,4 +26,11 @@ describe('app', () => {
       expect(response.text).toBe('{"message":"Not Found"}');
     });
   });
+
+  describe('GET /libraries', () => {
+    it('should respond with a list of library names', async () => {
+      const response = await request(app).get('/libraries');
+      expect(response.statusCode).toBe(200);
+    });
+  });
 });
