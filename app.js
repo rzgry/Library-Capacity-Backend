@@ -6,6 +6,7 @@ const logger = require('morgan');
 const helmet = require('helmet');
 
 const indexRouter = require('./routes/index');
+const librariesRouter = require('./routes/libraries');
 
 const app = express();
 
@@ -19,6 +20,7 @@ app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 
 app.use('/', indexRouter);
+app.use('/libraries', librariesRouter);
 
 // catch 404 and forward to error handler
 app.use((req, res, next) => {
@@ -29,7 +31,8 @@ app.use((req, res, next) => {
 // eslint-disable-next-line no-unused-vars
 app.use((err, req, res, next) => {
   // if err message is safe to expose to client
-  if (err.expose === true) {
+  // or we are running in development mode
+  if (err.expose === true || process.env.NODE_ENV === 'development') {
     res.status(err.status || 500).send(err);
   } else {
     res.status(500).send(createError.InternalServerError());

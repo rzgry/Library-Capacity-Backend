@@ -33,22 +33,22 @@ describe('app', () => {
       expect(response.statusCode).toBe(200);
     });
   });
-  describe('GET /libraries/capcity/taylor', () => {
+  describe('GET /libraries/taylor', () => {
     it('should respond with the capacity for taylor library', async () => {
-      const response = await request(app).get('/libraries/capcity/taylor');
+      const response = await request(app).get('/libraries/taylor');
       expect(response.statusCode).toBe(200);
     });
   });
-  describe('GET  /libraries/capcity/weldon', () => {
+  describe('GET  /libraries/weldon', () => {
     it('should respond with the capacity for weldon library', async () => {
-      const response = await request(app).get('/CurrentCapcity?lib=Weldon');
+      const response = await request(app).get('/libraries/weldon');
       expect(response.statusCode).toBe(200);
     });
   });
-  describe('GET /libraries/capcity/fakelib', () => {
-    it('should respond with 400 for a library that does not exist', async () => {
-      const response = await request(app).get('/libraries/capcity/fakelib');
-      expect(response.statusCode).toBe(400);
+  describe('GET /libraries/fakelib', () => {
+    it('should respond with 404 for a library that does not exist', async () => {
+      const response = await request(app).get('/libraries/fakelib');
+      expect(response.statusCode).toBe(404);
     });
   });
 });
