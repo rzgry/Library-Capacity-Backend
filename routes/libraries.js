@@ -1,29 +1,34 @@
 const express = require('express');
-const createError = require('http-errors');
+// const createError = require('http-errors');
 const asyncMiddleware = require('../middleware/asyncHandler');
 
 const router = express.Router();
 
-// Temp Hardcoded. Should be fetched from DB or soemthing
-const LIBRARIES = ['taylor', 'weldon'];
+const randValue = () => Math.round(Math.random() * 100) / 100;
 
 router.get(
   '/',
   asyncMiddleware(async (req, res) => {
-    res.send({ libraries: LIBRARIES });
-  }),
-);
+    const libraries = {
+      'Taylor Library': {
+        overallCapacity: randValue(),
+        floorCapacities: {
+          s1: randValue(),
+          s2: randValue(),
+          s3: randValue(),
+        },
+      },
+      'Weldon Library': {
+        overallCapacity: randValue(),
+        floorCapacities: {
+          s1: randValue(),
+          s2: randValue(),
+          s3: randValue(),
+        },
+      },
+    };
 
-router.get(
-  '/:libraryName',
-  asyncMiddleware(async (req, res) => {
-    const { libraryName } = req.params;
-
-    if (!LIBRARIES.includes(libraryName.toLowerCase())) {
-      throw createError.NotFound();
-    }
-
-    res.send({ name: libraryName, capacity: 80 });
+    res.send(libraries);
   }),
 );
 
