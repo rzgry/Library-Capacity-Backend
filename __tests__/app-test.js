@@ -6,9 +6,9 @@ describe('app', () => {
     expect(app).toBeTruthy();
   });
 
-  describe('GET /', () => {
+  describe('GET /healthcheck', () => {
     it('should respond to the GET method', async () => {
-      const response = await request(app).get('/');
+      const response = await request(app).get('/healthcheck');
       expect(response.statusCode).toBe(200);
     });
   });
@@ -28,27 +28,9 @@ describe('app', () => {
   });
 
   describe('GET /libraries', () => {
-    it('should respond with a list of library names', async () => {
+    it('should respond with a list of library names and capacities', async () => {
       const response = await request(app).get('/libraries');
       expect(response.statusCode).toBe(200);
-    });
-  });
-  describe('GET /libraries/taylor', () => {
-    it('should respond with the capacity for taylor library', async () => {
-      const response = await request(app).get('/libraries/taylor');
-      expect(response.statusCode).toBe(200);
-    });
-  });
-  describe('GET  /libraries/weldon', () => {
-    it('should respond with the capacity for weldon library', async () => {
-      const response = await request(app).get('/libraries/weldon');
-      expect(response.statusCode).toBe(200);
-    });
-  });
-  describe('GET /libraries/fakelib', () => {
-    it('should respond with 404 for a library that does not exist', async () => {
-      const response = await request(app).get('/libraries/fakelib');
-      expect(response.statusCode).toBe(404);
     });
   });
 });
