@@ -10,6 +10,7 @@ const randValue = () => Math.round(Math.random() * 100) / 100;
 router.get(
   '/',
   asyncMiddleware(async (req, res) => {
+    // get list of all libraries
     const results = await Library.find({});
 
     const libraries = {};
@@ -24,6 +25,7 @@ router.get(
       });
 
       libraries[lib.name] = {
+        floors: lib.floors.map(floor => floor.name),
         overallCapacity: randValue(),
         floorCapacities,
       };
