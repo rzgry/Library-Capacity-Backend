@@ -1,8 +1,11 @@
+require('dotenv').config();
+
 const createError = require('http-errors');
 const express = require('express');
 const cookieParser = require('cookie-parser');
 const logger = require('morgan');
 const helmet = require('helmet');
+const mongoose = require('mongoose');
 
 const librariesRouter = require('./routes/libraries');
 
@@ -31,4 +34,12 @@ app.use((req, res, next) => {
 // pass any errors to the error handler
 app.use(errorHandler);
 
+mongoose.connect(
+  process.env.MONGO_DB_CONNECTION,
+  { useNewUrlParser: true },
+);
+
+mongoose.Promise = global.Promise;
+const db = mongoose.connection;
+db.on('error', () => console.log('MongDB connection error')).once('open', () => console.log('MongDB connected'));
 module.exports = app;
