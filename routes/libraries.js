@@ -11,18 +11,21 @@ router.get(
   '/',
   asyncMiddleware(async (req, res) => {
     const results = await Library.find({});
-    console.log(JSON.stringify(results));
 
     const libraries = {};
 
     results.forEach((lib) => {
+      const floors = lib.floors;
+
+      const floorCapacities = {};
+
+      floors.forEach((floor) => {
+        floorCapacities[floor.name] = randValue();
+      });
+
       libraries[lib.name] = {
         overallCapacity: randValue(),
-        floorCapacities: {
-          s1: randValue(),
-          s2: randValue(),
-          s3: randValue(),
-        },
+        floorCapacities,
       };
     });
 
