@@ -11,12 +11,13 @@ router.get(
   '/',
   asyncMiddleware(async (req, res) => {
     // get list of all libraries
+    // TODO: Cache list of libs
     const results = await Library.find({});
 
     const libraries = {};
 
     results.forEach((lib) => {
-      const floors = lib.floors;
+      const { floors } = lib;
 
       const floorCapacities = {};
 
