@@ -27,5 +27,6 @@ const apCountSchema = new Schema({
 });
 
 const APCount = mongoose.model('APCount', apCountSchema);
+const MaximumAPCount = mongoose.model('MaximumAPCount', apCountSchema);
 
-module.exports = APCount;
+module.exports = { APCount, MaximumAPCount };
