@@ -3,11 +3,27 @@ const mongoose = require('mongoose');
 const { Schema } = mongoose;
 
 const apCountSchema = new Schema({
-  ap_name: String,
-  count: Number,
-  time: Date,
-  library_name: String,
-  floor_name: String,
+  timestamp: Date,
+  weldon: {
+    totalCount: Number,
+    floors: [
+      {
+        _id: false,
+        name: String,
+        count: Number,
+      },
+    ],
+  },
+  taylor: {
+    totalCount: Number,
+    floors: [
+      {
+        _id: false,
+        name: String,
+        count: Number,
+      },
+    ],
+  },
 });
 
 const APCount = mongoose.model('APCount', apCountSchema);

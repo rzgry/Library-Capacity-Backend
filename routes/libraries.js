@@ -1,38 +1,33 @@
 const express = require('express');
 // const createError = require('http-errors');
 const asyncMiddleware = require('../middleware/asyncHandler');
+const APCount = require('../models/APCount');
 const Library = require('../models/Library');
 
 const router = express.Router();
 
-const randValue = () => Math.round(Math.random() * 100) / 100;
-
 router.get(
   '/',
   asyncMiddleware(async (req, res) => {
-    // get list of all libraries
-    // TODO: Cache list of libs
-    const results = await Library.find({});
+    const libraries = await Library.find({});
 
-    const libraries = {};
+    // remove the _id field from the library objects
+    const sanitizedLibraries = libraries.map(lib => ({ name: lib.name }));
 
-    results.forEach((lib) => {
-      const { floors } = lib;
+    res.send({ libraries: sanitizedLibraries });
+  }),
+);
 
-      const floorCapacities = {};
+router.get(
+  '/capacities',
+  asyncMiddleware(async (req, res) => {
+    const apCounts = await APCount.find({})
+      .sort({ timestamp: -1 })
+      .limit(1);
 
-      floors.forEach((floor) => {
-        floorCapacities[floor.name] = randValue();
-      });
+    console.log(apCounts);
 
-      libraries[lib.name] = {
-        floors: lib.floors.map(floor => floor.name),
-        overallCapacity: randValue(),
-        floorCapacities,
-      };
-    });
-
-    res.send(libraries);
+    res.send({});
   }),
 );
 
