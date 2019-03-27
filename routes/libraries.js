@@ -2,6 +2,7 @@ const express = require('express');
 // const createError = require('http-errors');
 const asyncMiddleware = require('../middleware/asyncHandler');
 const { APCount, MaximumAPCount } = require('../models/APCount');
+const capacityAvg = require('../models/capacityAvg');
 const cache = require('../helpers/cache');
 const Library = require('../models/Library');
 
@@ -86,6 +87,83 @@ router.get(
     await cache.set('capacities', capacities);
 
     res.send(capacities);
+  }),
+);
+
+function getTimeSlot(date) {
+  const hour = date.getHours();
+  const min = date.getMinutes() - (date.getMinutes() % 15);
+  return { index: hour * 4 + min / 15, time: `${hour}:${min}` };
+}
+
+router.get(
+  '/averageCapacities',
+  asyncMiddleware(async (req, res) => {
+    const { time } = req.query;
+
+    let date;
+    if (time == null) {
+      date = new Date();
+    } else {
+      date = new Date(time);
+    }
+
+    const weekday = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
+
+    const timeSlot = getTimeSlot(date);
+
+    const day = weekday[date.getDay()];
+
+    const avgCache = await cache.get(`capacity_${day}_${timeSlot.time}`);
+    if (avgCache !== undefined) {
+      res.send(avgCache);
+      return;
+    }
+
+    const avgCapacitiesPromise = capacityAvg.find({ _id: day }).limit(1);
+
+    const maximumAPCountsPromise = MaximumAPCount.find({})
+      .sort({ timestamp: -1 })
+      .limit(1);
+
+    const [avgCapacities, maximumAPCounts] = await Promise.all([
+      avgCapacitiesPromise,
+      maximumAPCountsPromise,
+    ]);
+
+    const avgAPCounts = avgCapacities[0];
+    const maxAPCounts = maximumAPCounts[0];
+
+    const taylor = {
+      total: computeCapacity(
+        avgAPCounts.taylor.times[timeSlot.index].totalCount,
+        maxAPCounts.taylor.totalCount,
+      ),
+      floors: avgAPCounts.taylor.times[timeSlot.index].floors.map((floor, index) => ({
+        name: floor.name,
+        capacity: computeCapacity(floor.count, maxAPCounts.taylor.floors[index].count),
+      })),
+    };
+
+    const weldon = {
+      total: computeCapacity(
+        avgAPCounts.weldon.times[timeSlot.index].totalCount,
+        maxAPCounts.weldon.totalCount,
+      ),
+      floors: avgAPCounts.weldon.times[timeSlot.index].floors.map((floor, index) => ({
+        name: floor.name,
+        capacity: computeCapacity(floor.count, maxAPCounts.weldon.floors[index].count),
+      })),
+    };
+
+    const avgAPCountsPercentage = {
+      time: timeSlot.time,
+      taylor,
+      weldon,
+    };
+
+    await cache.set(`capacity_${day}_${timeSlot.time}`, avgAPCountsPercentage);
+    res.send(avgAPCountsPercentage);
   }),
 );
 
