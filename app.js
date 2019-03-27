@@ -19,7 +19,6 @@ db.on('error', () => {
 });
 
 const librariesRouter = require('./routes/libraries');
-
 const errorHandler = require('./middleware/errorHandler');
 
 const app = express();
