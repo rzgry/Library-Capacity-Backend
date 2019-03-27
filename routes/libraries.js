@@ -7,6 +7,28 @@ const Library = require('../models/Library');
 
 const router = express.Router();
 
+// TODO: Move these to DB
+const taylorLibVolumeLevels = {
+  'Level 1': 'Silent',
+  'Level 2': 'Silent',
+  'Level 3': 'Conversation Friendly',
+  'Stacks 1': 'Quiet',
+  'Stacks 2': 'Quiet',
+  'Stacks 3': 'Quiet',
+  'Stacks 4': 'Quiet',
+  'Stacks 5': 'Quiet',
+  'Stacks 6': 'Quiet',
+};
+
+const weldonLibVolumeLevels = {
+  'Level G': 'Silent / Quiet',
+  'Level 1': 'Conversation Friendly / Quiet',
+  'Level 2': 'Conversation Friendly',
+  'Level 3': 'Quiet',
+  'Level 4': 'Silent',
+  'Level 5': 'Silent',
+};
+
 router.get(
   '/',
   asyncMiddleware(async (req, res) => {
@@ -67,6 +89,7 @@ router.get(
       total: computeCapacity(currentAPCounts.taylor.totalCount, maxAPCounts.taylor.totalCount),
       floors: currentAPCounts.taylor.floors.map((floor, index) => ({
         name: floor.name,
+        volume_level: taylorLibVolumeLevels[floor.name],
         capacity: computeCapacity(floor.count, maxAPCounts.taylor.floors[index].count),
       })),
     };
@@ -75,6 +98,7 @@ router.get(
       total: computeCapacity(currentAPCounts.weldon.totalCount, maxAPCounts.weldon.totalCount),
       floors: currentAPCounts.weldon.floors.map((floor, index) => ({
         name: floor.name,
+        volume_level: weldonLibVolumeLevels[floor.name],
         capacity: computeCapacity(floor.count, maxAPCounts.weldon.floors[index].count),
       })),
     };
