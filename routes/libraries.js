@@ -45,6 +45,8 @@ router.get(
       return;
     }
 
+    console.log('Recalculating library capacity'); // eslint-disable-line no-console
+
     const currentAPCountsPromise = APCount.find({})
       .sort({ timestamp: -1 })
       .limit(1);

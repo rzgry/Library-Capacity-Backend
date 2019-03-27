@@ -28,8 +28,15 @@ describe('app', () => {
   });
 
   describe('GET /libraries', () => {
-    it('should respond with a list of library names and capacities', async () => {
+    it('should respond with a list of library names', async () => {
       const response = await request(app).get('/libraries');
+      expect(response.statusCode).toBe(200);
+    });
+  });
+
+  describe('GET /libraries/capacities', () => {
+    it('should respond with a list of library names', async () => {
+      const response = await request(app).get('/libraries/capacities');
       expect(response.statusCode).toBe(200);
     });
   });

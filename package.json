@@ -10,6 +10,7 @@
     "start": "NODE_ENV=production node ./bin/www",
     "dev": "NODE_ENV=development nodemon ./bin/www",
     "test": "jest --watchAll",
+    "test:silent": "jest --watchAll --silent",
     "lint": "eslint .",
     "lint:fix": "eslint --fix ."
   },
