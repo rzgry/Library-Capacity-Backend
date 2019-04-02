@@ -127,18 +127,13 @@ router.get(
   asyncMiddleware(async (req, res) => {
     const { time } = req.query;
 
-    let date;
-    if (time == null) {
-      date = new Date();
-    } else {
-      date = new Date(time);
-    }
+    const date = time != null ? new Date(time) : new Date();
 
-    const weekday = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
+    const weekdays = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
 
     const timeSlot = getTimeSlot(date);
 
-    const day = weekday[date.getDay()];
+    const day = weekdays[date.getDay()];
 
     const avgCache = await cache.get(`capacity_${day}_${timeSlot.time}`);
     if (avgCache !== undefined) {
