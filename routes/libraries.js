@@ -127,7 +127,7 @@ router.get(
   asyncMiddleware(async (req, res) => {
     const { time } = req.query;
 
-    const date = time != null ? new Date(time) : new Date();
+    const date = time != null ? new Date(parseInt(time, 10)) : new Date();
 
     const weekdays = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
 
